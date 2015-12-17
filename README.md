@@ -1,48 +1,27 @@
-Myapp
+Illustration of Issue with pry-byebug
 ================
 
-This application was generated with the [rails_apps_composer](https://github.com/RailsApps/rails_apps_composer) gem
-provided by the [RailsApps Project](http://railsapps.github.io/).
+Summary: when pry-byebug is added to this project's gem file and used during feature test (RSpec or Cucumber with Capybara) execution, the web thread/process waits on a `binding.pry` even if that breakpoint is located in the test file. When pry-byebug is removed, the web thread/process is not blocked and the user may click around around if they are using a non-headless browser (Selenium w/ Firefox in this case). 
 
-Rails Composer is supported by developers who purchase our RailsApps tutorials.
+### Steps to Reproduce
+1. Clone this repo.
+2. `bundle`
+3. `rake db:create`
+4. `rspec spec/features/users/sign_in_spec.rb:11`
+5. When the break point is reached, attempt to click a link to a new page.
 
-Problems? Issues?
+#### Expected Result
+The server is able to handle the request and renders the page.
+
+#### Actual Result
+The server hangs waiting on the binding.pry call.
+
+6. Continue on from the breakpoint. 
+7. Remove `gem 'pry-byebug'` from the gem file.
+8. `rspec spec/features/users/sign_in_spec.rb:11`
+9. When the break point is reached, attempt to click a link to a new page.
+
+#### Actual Result
+The server does not wait on the binding.pry call.
+
 -----------
-
-Need help? Ask on Stack Overflow with the tag 'railsapps.'
-
-Your application contains diagnostics in the README file. Please provide a copy of the README file when reporting any issues.
-
-If the application doesn't work as expected, please [report an issue](https://github.com/RailsApps/rails_apps_composer/issues)
-and include the diagnostics.
-
-Ruby on Rails
--------------
-
-This application requires:
-
-- Ruby 2.2.3
-- Rails 4.2.5
-
-Learn more about [Installing Rails](http://railsapps.github.io/installing-rails.html).
-
-Getting Started
----------------
-
-Documentation and Support
--------------------------
-
-Issues
--------------
-
-Similar Projects
-----------------
-
-Contributing
-------------
-
-Credits
--------
-
-License
--------
